@@ -1,8 +1,8 @@
 <html lang="en">
 <head>
     <title>Content Writer</title>
-    <!-- CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.0/css/bootstrap.min.css">
+  
     <style>
         body {
             display: flex;
@@ -43,6 +43,7 @@
         }
     </style>
 </head>
+    
 <body>
     <div class="logo">SEO Writer</div>
     <div class="search-bar">
