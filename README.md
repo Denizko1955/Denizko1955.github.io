@@ -43,7 +43,7 @@
         }
     </style>
 </head>
-    
+  
 <body>
     <div class="logo">SEO Writer</div>
     <div class="search-bar">
