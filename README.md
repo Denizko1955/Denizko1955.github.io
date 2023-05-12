@@ -1,61 +1,46 @@
+<!doctype html>
 <html lang="en">
-<head>
-    <title>Content Writer</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.0/css/bootstrap.min.css">
-  
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- CKEditor -->
+    <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
     <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-        
-        .search-bar {
-            margin-bottom: 20px;
-        }
-        
-        .button {
-            padding: 5px 30px;
-            font-size: 16px;
-            height: 40px;
-            width: 150px;
-        }
-        
-        .rounded-input {
-            border-radius: 30px;
-        }
-        
-        .output {
-            margin-top: 20px;
-            width: 100%;
-            height: 200px;
-            overflow: auto;
-            border: 1px solid #ccc;
-            padding: 10px;
+        .output-error {
+            color: #ff6464;
         }
     </style>
-</head>
-  
-<body>
-    <div class="logo">SEO Writer</div>
-    <div class="search-bar">
-        <div class="input-group">
-            <input id="url-input" type="text" class="form-control form-control-lg rounded-input" placeholder="Enter URL">
+
+    <title>Code Editor</title>
+  </head>
+  <body class="bg-dark text-white">
+    <div class="container py-5">
+        <h1 class="mb-4 text-center">Code Editor</h1>
+
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="input-group mb-3">
+                    <input type="text" id="url-input" class="form-control" placeholder="Enter URL" aria-label="Enter URL">
+                    <button id="write-button" class="btn btn-primary">Fetch Content</button>
+                    <button id="clear-button" class="btn btn-secondary">Clear</button>
+                </div>
+
+                <textarea name="editor1" id="editor1"></textarea>
+            </div>
         </div>
     </div>
-    <button id="write-button" class="btn btn-primary button">Write</button>
-    <div id="output" class="output"></div>
 
-    <!-- JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.0/js/bootstrap.bundle.min.js"></script>
+    <!-- CKEditor Replace -->
+    <script>
+        CKEDITOR.replace('editor1');
+    </script>
+
+    <!-- Functionality -->
     <script>
         document.getElementById("write-button").addEventListener("click", function() {
             var url = document.getElementById("url-input").value;
@@ -63,29 +48,30 @@
             fetch(corsProxy + url)
                 .then(response => response.text())
                 .then(data => {
-                    // HTML'i ayrıştır
                     var parser = new DOMParser();
                     var htmlDoc = parser.parseFromString(data, 'text/html');
-    
-                    // Sadece h ve p etiketlerini al
                     var headingsAndParagraphs = htmlDoc.querySelectorAll('h1, h2, h3, h4, h5, h6, p');
                     var textContent = '';
                     headingsAndParagraphs.forEach(function(element) {
                         textContent += '<p>' + element.textContent + '</p>';
                     });
-    
-                    // Metni görüntüle
-                    document.getElementById("output").innerHTML = textContent;
+                    CKEDITOR.instances.editor1.setData(textContent);
                 })
                 .catch(error => {
                     console.error(error);
-                    document.getElementById("output").textContent = "An error occurred while fetching the content.";
+                    CKEDITOR.instances.editor1.setData('<p class="output-error">An error occurred while fetching the content. Please try again with a different URL.</p>');
                 });
         });
+
+        document.getElementById("clear-button").addEventListener("click", function() {
+            CKEDITOR.instances.editor1.setData('');
+            document.getElementById("url-input").value = '';
+        });
     </script>
-</body>
+
+    <!-- Optional JavaScript; choose one of the two! -->
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+
+  </body>
 </html>
-
-                   
-
-
